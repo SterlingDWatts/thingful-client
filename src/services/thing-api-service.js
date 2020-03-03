@@ -1,4 +1,5 @@
 import config from "../config";
+import TokenService from "./token-service";
 
 const ThingApiService = {
   getThings() {
@@ -10,14 +11,18 @@ const ThingApiService = {
   },
   getThing(thingId) {
     return fetch(`${config.API_ENDPOINT}/things/${thingId}`, {
-      headers: {}
+      headers: {
+        Authorization: `basic ${TokenService.getAuthToken()}`
+      }
     }).then(res =>
       !res.ok ? res.json().then(e => Promise.reject(e)) : res.json()
     );
   },
   getThingReviews(thingId) {
     return fetch(`${config.API_ENDPOINT}/things/${thingId}/reviews`, {
-      headers: {}
+      headers: {
+        Authorization: `basic ${TokenService.getAuthToken()}`
+      }
     }).then(res =>
       !res.ok ? res.json().then(e => Promise.reject(e)) : res.json()
     );
@@ -26,7 +31,8 @@ const ThingApiService = {
     return fetch(`${config.API_ENDPOINT}/reviews`, {
       method: "POST",
       headers: {
-        "content-type": "application/json"
+        "content-type": "application/json",
+        Authorization: `basic ${TokenService.getAuthToken()}`
       },
       body: JSON.stringify({
         thing_id: thingId,
